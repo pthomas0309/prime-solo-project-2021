@@ -13,12 +13,16 @@ import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
+// Prime components
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+
+// My components
+import ActivityForm from '../A-myComponents/ActivityForm/ActivityForm'
 
 import './App.css';
 
@@ -56,6 +60,15 @@ function App() {
             path="/user"
           >
             <UserPage />
+          </ProtectedRoute>
+
+          {/* Visiting localhost:3000/new-activity will bring us to the add activity page */}
+          <ProtectedRoute
+            // logged in shows ActivityForm else shows LoginPage
+            exact
+            path="/new-activity"
+          >
+            <ActivityForm />
           </ProtectedRoute>
 
           <ProtectedRoute
