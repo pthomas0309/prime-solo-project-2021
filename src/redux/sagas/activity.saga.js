@@ -72,8 +72,9 @@ function* deleteActivity(action) {
         withCredentials: true,
         };
 
+        console.log(action.payload);
         // axios POST for adding an activity to the user_activity table
-        yield axios.delete('/api/activity', action.payload, config);
+        yield axios.delete(`/api/activity/${action.payload.activityId}/${action.payload.userId}`, config);
 
         // run the saga to GET all activity
         yield put({ type: 'FETCH_ACTIVITY' });

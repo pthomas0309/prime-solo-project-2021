@@ -23,11 +23,12 @@ export default function DisplayActivities({dispatch}) {
         e.preventDefault();
 
         console.log(e.target.value);
+        console.log(e.target.id);
 
         // action for activity saga 'DELETE ACTIVITY'
         dispatch({
             type: 'DELETE_ACTIVITY',
-            payload: e.target.value
+            payload: {activityId: e.target.id, userId: e.target.value}
         });
 
     };
@@ -42,11 +43,11 @@ export default function DisplayActivities({dispatch}) {
             and append a div with the activity name and
             a delete button that has the value of the activity */}
             {activityReducer.map( activity => {
+                console.log(activity);
                 return  <div key={activity.id} >
 
                             <p>{activity.type}</p>
-                            <button value={activity.id} onClick={ e => deleteEvent(e)} >DELETE</button>
-
+                            <button id={activity.id} value={activity.user_id} onClick={ e => deleteEvent(e)} >DELETE</button>
                         </div>
             })}
         </>
