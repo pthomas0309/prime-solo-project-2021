@@ -72,7 +72,7 @@ export default function ActivityForm() {
             </div>
 
             {/* Displays all activities added */}
-            <DisplayActivities />
+            <DisplayActivities dispatch={dispatch} />
         </>
     )
 }
