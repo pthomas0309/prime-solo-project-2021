@@ -5,15 +5,22 @@ const router = express.Router();
 /**
  * GET route template
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // GET route code here
 });
 
 /**
  * POST route template
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // POST route code here
+});
+
+/**
+ * DELETE route template
+ */
+ router.delete('/', async (req, res) => {
+  // DELETE route code here
 });
 
 module.exports = router;

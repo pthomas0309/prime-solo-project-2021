@@ -27,7 +27,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     // queryString to get the activities
     // attatched to the user id sent in the request
     const queryString = `
-      SELECT "user_activities".type, "user_activities".id
+      SELECT *
       FROM "user_activities"
       WHERE "user_activities".user_id = $1;
     `;
@@ -46,12 +46,12 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     res.send(userActivities.rows);
   }
 
-  // catch executes if theres an error (e) in try
-  catch (e) {
+  // catch executes if theres an error (err) in try
+  catch (err) {
 
     // abort sequel query
     await client.query('ROLLBACK');
-    console.log('Error in activity router GET aborted:', e);
+    console.log('Error in activity router GET aborted:', err);
 
     // send rejected status code
     res.sendStatus(500);
@@ -108,11 +108,11 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
 }
 
 // catch executes if theres an error (e) in try
-catch (e) {
+catch (err) {
 
   // abort sequel query
   await client.query('ROLLBACK');
-  console.log('Error in activity router POST aborted:', e);
+  console.log('Error in activity router POST aborted:', err);
 
   // send rejected status code
   res.sendStatus(500);
@@ -125,5 +125,75 @@ finally {
   client.release();
 };
 });
+
+/**
+ * DELETE route template
+ */
+ router.delete('/:activityId/:userId', rejectUnauthenticated, async (req, res) => {
+    // DELETE route code here
+
+    console.log(
+        req.user.id
+    );
+    console.log(
+        req.params
+    );
+    // if executes when the user id on the activity
+    // matches the user logged in
+    if (req.user.id == req.params.userId) {
+        // create a client make the pool connection
+        const client = await pool.connect();
+
+        // try executes if theres no errors
+        try{
+
+            // variable for the activity id to delete
+            const activityId = req.params.activityId;
+
+            // SQL query to delete an activity by id
+            const queryString = `
+                DELETE FROM "user_activities" WHERE "user_activities".id = $1;
+            `;
+
+            // send the query to postgres
+            await client
+
+            // attach activity to post and user id in the query args.
+            .query(queryString, [activityId]);
+
+            // commit DB changes
+            await client.query('COMMIT');
+
+            // send a response code
+            res.sendStatus(202);
+
+        }
+        
+        // catch executes if theres an error (e) in try
+        catch (err) {
+
+            // abort sequel query
+            await client.query('ROLLBACK');
+            console.log('Error in activity router DELETE aborted:', err);
+        
+            // send rejected status code
+            res.sendStatus(500);
+        }
+        
+        // finally executes when try or catch is finished
+        finally {
+        
+            // call the release callback
+            client.release();
+        };
+    }
+
+    // else executes if the user id that posted the
+    // activity is not the same as the one logged in
+    else {
+        res.sendStatus(401)
+    };
+
+  });
 
 module.exports = router;
