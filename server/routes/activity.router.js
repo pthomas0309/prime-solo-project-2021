@@ -40,7 +40,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     
     console.log(userActivities.rows);
 
-    res.send(userActivities)
+    res.send(userActivities.rows);
   }
 
   // catch executes if theres an error (e) in try
@@ -60,7 +60,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     // call the release callback
     client.release();
   };
-  
+
 });
 
 /**
