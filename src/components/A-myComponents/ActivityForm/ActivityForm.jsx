@@ -50,7 +50,7 @@ export default function ActivityForm() {
             {/* Activity input field */}
             <div>
 
-                <form onSubmit={addActivity} >
+                <form onSubmit={() => addActivity(event)} >
 
                     <label 
                         htmlFor="activityIn">
@@ -60,7 +60,7 @@ export default function ActivityForm() {
                             type="text" 
                             id="activityIn" 
                             placeholder="Name activity here" 
-                            onChange={createActivity} 
+                            onChange={() => createActivity(event)} 
                             value={activityName} 
                         />
 
