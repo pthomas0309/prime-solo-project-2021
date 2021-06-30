@@ -2,7 +2,7 @@
 import {useEffect} from 'react';
 
 // bring in useSelector
-import useSelector from 'react-redux';
+import {useSelector} from 'react-redux';
 
 export default function DisplayActivities({dispatch}) {
 
@@ -17,18 +17,22 @@ export default function DisplayActivities({dispatch}) {
     }, [])
 
     // set variable for the activities in the reducer
+    const activityReducer = useSelector( store => store.activity )
 
+    console.log(activityReducer);
     return (
         <>
             {/* .map over the array of activities
             and append a div with the activity name and
             a delete button that has the value of the activity */}
-            <div>
+            {activityReducer.map( activity => {
+                return  <div key={activity.id} >
 
-                <p>LOREM IPSEM</p>
-                <button value="" onClick="" >DELETE</button>
+                            <p>{activity.type}</p>
+                            <button value={activity.id} onClick={() => deleteActivity(event)} >DELETE</button>
 
-            </div>
+                        </div>
+            })}
         </>
     )
 }

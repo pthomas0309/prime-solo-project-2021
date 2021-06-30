@@ -27,7 +27,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     // queryString to get the activities
     // attatched to the user id sent in the request
     const queryString = `
-      SELECT "user_activities".type
+      SELECT "user_activities".type, "user_activities".id
       FROM "user_activities"
       WHERE "user_activities".user_id = $1;
     `;
