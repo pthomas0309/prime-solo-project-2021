@@ -4,6 +4,9 @@ import React, {useEffect} from 'react';
 // bring in useSelector
 import {useSelector} from 'react-redux';
 
+// bring in delete button
+import ActivityDeleteBtn from '../ActivityDeleteBtn/ActivityDeleteBtn'
+
 export default function DisplayActivities({dispatch}) {
 
     // useEffect to run the GET on page load
@@ -33,6 +36,19 @@ export default function DisplayActivities({dispatch}) {
 
     };
 
+    // function to handle clicking edit
+    const editEvent = e => {
+
+        // stop page load
+        e.preventDefault();
+
+        // action for activity saga 'EDIT_ACTIVITY'
+        dispatch({
+            type: 'EDIT_ACTIVITY',
+            payload: {activityId: e.target.id, userId: e.target.value}
+        })
+    };
+
     // set variable for the activities in the reducer
     const activityReducer = useSelector( store => store.activity );
 
@@ -47,7 +63,8 @@ export default function DisplayActivities({dispatch}) {
                 return  <div key={activity.id} >
 
                             <p>{activity.type}</p>
-                            <button id={activity.id} value={activity.user_id} onClick={ e => deleteEvent(e)} >DELETE</button>
+                            <ActivityDeleteBtn id={activity.id} userId={activity.user_id} deleteEvent={deleteEvent} />
+                            <ActivityEditBtn id={activity.id} userId={activity.user_id} editEvent={editEvent} />
                         </div>
             })}
         </>
