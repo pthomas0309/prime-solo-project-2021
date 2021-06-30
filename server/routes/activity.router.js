@@ -46,12 +46,12 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     res.send(userActivities.rows);
   }
 
-  // catch executes if theres an error (e) in try
-  catch (e) {
+  // catch executes if theres an error (err) in try
+  catch (err) {
 
     // abort sequel query
     await client.query('ROLLBACK');
-    console.log('Error in activity router GET aborted:', e);
+    console.log('Error in activity router GET aborted:', err);
 
     // send rejected status code
     res.sendStatus(500);
@@ -108,11 +108,11 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
 }
 
 // catch executes if theres an error (e) in try
-catch (e) {
+catch (errr) {
 
   // abort sequel query
   await client.query('ROLLBACK');
-  console.log('Error in activity router POST aborted:', e);
+  console.log('Error in activity router POST aborted:', err);
 
   // send rejected status code
   res.sendStatus(500);

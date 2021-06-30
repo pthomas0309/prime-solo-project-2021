@@ -23,9 +23,9 @@ function* fetchActivity() {
     } 
 
     // catch executes after error in try
-    catch (error) {
+    catch (err) {
 
-        console.log('Error in activity GET', error);
+        console.log('Error in activity GET', err);
 
     }
 }
@@ -52,9 +52,9 @@ function* addActivity(action) {
     } 
 
     // catch executes after error in try
-    catch (error) {
+    catch (err) {
 
-        console.log('Error in activity POST', error);
+        console.log('Error in activity POST', err);
 
     }
 }

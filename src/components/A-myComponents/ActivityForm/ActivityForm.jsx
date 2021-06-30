@@ -19,8 +19,8 @@ export default function ActivityForm() {
         // the activities GET route
         dispatch({
             type: 'FETCH_ACTIVITY'
-        })
-    }, [])
+        });
+    }, []);
 
     // make useDispatch available as dispatch
     const dispatch = useDispatch();
@@ -29,29 +29,29 @@ export default function ActivityForm() {
     const [activityName, setActivityName] = useState({ activity: '' });
 
     // function for onChange of activityIn target
-    const createActivity = event => {
+    const createActivity = e => {
 
         // stop page load
-        event.preventDefault();
+        e.preventDefault();
 
         // update state variable for activity
         setActivityName({ activity: event.target.value });
     };
 
     // function for onSubmit of the form target
-    const addActivity = event => {
+    const addActivity = e => {
 
         // stop page load
-        event.preventDefault();
+        e.preventDefault();
 
         // dispatch to the activities saga for the POST
         dispatch({
             type: 'ADD_NEW_ACTIVITY',
             payload: activityName
-        })
+        });
 
         // clear input
-        setActivityName({ activity: '' })
+        setActivityName({ activity: '' });
 
     }
 
@@ -63,7 +63,7 @@ export default function ActivityForm() {
             {/* Activity input field */}
             <div>
 
-                <form onSubmit={() => addActivity(event)} >
+                <form onSubmit={ e => addActivity(e)} >
 
                     <label 
                         htmlFor="activityIn">
@@ -73,7 +73,7 @@ export default function ActivityForm() {
                             type="text" 
                             id="activityIn" 
                             placeholder="Name activity here" 
-                            onChange={() => createActivity(event)} 
+                            onChange={ e => createActivity(e)} 
                             value={activityName.activity} 
                         />
 

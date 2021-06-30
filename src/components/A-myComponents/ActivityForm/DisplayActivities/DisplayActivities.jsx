@@ -1,5 +1,5 @@
 // bring in useEffect
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 // bring in useSelector
 import {useSelector} from 'react-redux';
@@ -13,11 +13,27 @@ export default function DisplayActivities({dispatch}) {
         // the activities GET route
         dispatch({
             type: 'FETCH_ACTIVITY'
-        })
-    }, [])
+        });
+    }, []);
+
+    // function to handle clicking delete
+    const deleteEvent = e => {
+
+        // stop page load
+        e.preventDefault();
+
+        console.log(e.target.value);
+
+        // action for activity saga 'DELETE ACTIVITY'
+        dispatch({
+            type: 'DELETE_ACTIVITY',
+            payload: e.target.value
+        });
+
+    };
 
     // set variable for the activities in the reducer
-    const activityReducer = useSelector( store => store.activity )
+    const activityReducer = useSelector( store => store.activity );
 
     console.log(activityReducer);
     return (
@@ -29,7 +45,7 @@ export default function DisplayActivities({dispatch}) {
                 return  <div key={activity.id} >
 
                             <p>{activity.type}</p>
-                            <button value={activity.id} onClick={() => deleteActivity(event)} >DELETE</button>
+                            <button value={activity.id} onClick={ e => deleteEvent(e)} >DELETE</button>
 
                         </div>
             })}
