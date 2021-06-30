@@ -7,13 +7,26 @@ import {useState} from 'react';
 // bring in useDispatch
 import {useDispatch} from 'react-redux';
 
+// bring in useEffect
+import {useEffect} from 'react';
+
 export default function ActivityForm() {
+
+    // useEffect to run the GET on page load
+    useEffect( () => {
+
+        // dispatch calls the saga that follows
+        // the activities GET route
+        dispatch({
+            type: 'FETCH_ACTIVITY'
+        })
+    }, [])
 
     // make useDispatch available as dispatch
     const dispatch = useDispatch();
 
     // set up state variable for the activity input
-    const [activityName, setActivityName] = useState('');
+    const [activityName, setActivityName] = useState({ activity: '' });
 
     // function for onChange of activityIn target
     const createActivity = event => {
@@ -22,7 +35,7 @@ export default function ActivityForm() {
         event.preventDefault();
 
         // update state variable for activity
-        setActivityName(event.target.value);
+        setActivityName({ activity: event.target.value });
     };
 
     // function for onSubmit of the form target
@@ -38,7 +51,7 @@ export default function ActivityForm() {
         })
 
         // clear input
-        setActivityName('')
+        setActivityName({ activity: '' })
 
     }
 
@@ -61,7 +74,7 @@ export default function ActivityForm() {
                             id="activityIn" 
                             placeholder="Name activity here" 
                             onChange={() => createActivity(event)} 
-                            value={activityName} 
+                            value={activityName.activity} 
                         />
 
                     </label>
