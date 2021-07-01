@@ -40,22 +40,22 @@ export default function DisplayActivities({dispatch}) {
     };
 
     // state var for edit condition
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState({verify: false, activityId: ''});
 
     // state var for changes to activity.type
-    const [typeChanges, setTypeChanges] = useState({edits: ''});
+    const [typeChanges, setTypeChanges] = useState({edits: '', activityId: '', userId: ''});
 
     // function to handle clicking edit
-    const editEvent = (e, type) => {
+    const editEvent = (e, type, activityId, userId) => {
 
         // stop page load
         e.preventDefault();
 
         // set isEditing to true to render edit input
-        setIsEditing(true);
+        setIsEditing({verify: true, activityId: activityId});
 
         // set typeChanges to be the value of activity.type
-        setTypeChanges({edits: type});
+        setTypeChanges({edits: type, activityId: activityId, userId: userId});
     };
 
     // function to handle updates to activity.type
@@ -69,10 +69,28 @@ export default function DisplayActivities({dispatch}) {
         setTypeChanges({edits: e.target.value});
     };
 
+    // function to handle clicking submit
+    const submitChanges = e => {
+
+        // stop page load
+        e.preventDefault();
+
+        // action for activity saga 'SUBMIT_CHANGES'
+        dispatch({
+            type: 'SUBMIT_CHANGES',
+            payload: typeChanges
+        });
+
+        // reset state variables
+        setIsEditing({verify: false, activityId: ''});
+        setTypeChanges({edits: '', activityId: '', userId: ''});
+
+    };
+
     // set variable for the activities in the reducer
     const activityReducer = useSelector( store => store.activity );
 
-    console.log(activityReducer);
+    console.log(typeChanges);
     return (
         <>
             {/* .map over the array of activities
@@ -80,34 +98,39 @@ export default function DisplayActivities({dispatch}) {
             a delete button that has the value of the activity */}
             {activityReducer.map( activity => {
                 console.log(activity);
-                return  <div key={activity.id} >
 
-                            {/* conditional rendering for edit */}
-                            {isEditing ? 
-                                
-                                <label 
-                                    htmlFor="editActivityIn">
-                                    Update Activity Name
-                                    <br/>
-                                    <input required 
-                                        type="text" 
-                                        id="editActivityIn"
-                                        onChange={ e => updateActivity(e)} 
-                                        value={typeChanges.edits} 
-                                    />
+                // conditional for rendering edits
+                // dependent on the activity id
+                if (isEditing.verify && activity.id == isEditing.activityId){
+                    return ( 
+                        <div key={activity.id} >
+                            <label 
+                                htmlFor="editActivityIn">
+                                Update Activity Name
+                                <br/>
+                                <input required 
+                                    type="text" 
+                                    id="editActivityIn"
+                                    onChange={ e => updateActivity(e)} 
+                                    value={typeChanges.edits} 
+                                />
 
-                                </label>
-                            
-                            :
-                                <div>
-                                    <p>{activity.type}</p>
-                                    <ActivityDeleteBtn id={activity.id} userId={activity.user_id} deleteEvent={deleteEvent} />
-                                    <ActivityEditBtn id={activity.id} type={activity.type} userId={activity.user_id} editEvent={editEvent} />
-                                </div>
-                            }
-
+                            </label>
+                            <button onClick={e => submitChanges(e, activity.id, activity.user_id)} >SUBMIT</button>
                         </div>
-            })}
+                    )
+                }
+
+                else {
+                    return (
+                        <div key={activity.id} >
+                            <p>{activity.type}</p>
+                                <ActivityDeleteBtn id={activity.id} userId={activity.user_id} deleteEvent={deleteEvent} />
+                                <ActivityEditBtn id={activity.id} type={activity.type} userId={activity.user_id} editEvent={editEvent} />
+                        </div>
+                    )
+                };
+            })};
         </>
     )
 }
