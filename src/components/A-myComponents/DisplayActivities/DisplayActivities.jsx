@@ -66,7 +66,7 @@ export default function DisplayActivities({dispatch}) {
 
         // update the state variable for
         // changes to the input
-        setTypeChanges({edits: e.target.value});
+        setTypeChanges({...typeChanges, edits: e.target.value});
     };
 
     // function to handle clicking submit

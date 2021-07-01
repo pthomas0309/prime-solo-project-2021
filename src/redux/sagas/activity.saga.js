@@ -104,7 +104,7 @@ function* updateActivity(action) {
 
         console.log(action.payload);
         // axios PUT for adding an activity to the user_activity table
-        yield axios.put(`/api/activity/${action.payload.activityId}/${action.payload.userId}`, action.payload.edits, config);
+        yield axios.put(`/api/activity/${action.payload.activityId}/${action.payload.userId}`, action.payload, config);
 
         // run the saga to GET all activity
         yield put({ type: 'FETCH_ACTIVITY' });
