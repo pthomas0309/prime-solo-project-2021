@@ -1,11 +1,14 @@
 // bring in useEffect
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 // bring in useSelector
 import {useSelector} from 'react-redux';
 
 // bring in delete button
 import ActivityDeleteBtn from '../ActivityDeleteBtn/ActivityDeleteBtn'
+
+// bring in edit button
+import ActivityEditBtn from '../ActivityEditBtn/ActivityEditBtn';
 
 export default function DisplayActivities({dispatch}) {
 
@@ -36,17 +39,34 @@ export default function DisplayActivities({dispatch}) {
 
     };
 
+    // state var for edit condition
+    const [isEditing, setIsEditing] = useState(false);
+
+    // state var for changes to activity.type
+    const [typeChanges, setTypeChanges] = useState({edits: ''});
+
     // function to handle clicking edit
-    const editEvent = e => {
+    const editEvent = (e, type) => {
 
         // stop page load
         e.preventDefault();
 
-        // action for activity saga 'EDIT_ACTIVITY'
-        dispatch({
-            type: 'EDIT_ACTIVITY',
-            payload: {activityId: e.target.id, userId: e.target.value}
-        })
+        // set isEditing to true to render edit input
+        setIsEditing(true);
+
+        // set typeChanges to be the value of activity.type
+        setTypeChanges({edits: type});
+    };
+
+    // function to handle updates to activity.type
+    const updateActivity = e => {
+        
+        // stop page load
+        e.preventDefault();
+
+        // update the state variable for
+        // changes to the input
+        setTypeChanges({edits: e.target.value});
     };
 
     // set variable for the activities in the reducer
@@ -62,9 +82,30 @@ export default function DisplayActivities({dispatch}) {
                 console.log(activity);
                 return  <div key={activity.id} >
 
-                            <p>{activity.type}</p>
-                            <ActivityDeleteBtn id={activity.id} userId={activity.user_id} deleteEvent={deleteEvent} />
-                            <ActivityEditBtn id={activity.id} userId={activity.user_id} editEvent={editEvent} />
+                            {/* conditional rendering for edit */}
+                            {isEditing ? 
+                                
+                                <label 
+                                    htmlFor="editActivityIn">
+                                    Update Activity Name
+                                    <br/>
+                                    <input required 
+                                        type="text" 
+                                        id="editActivityIn"
+                                        onChange={ e => updateActivity(e)} 
+                                        value={typeChanges.edits} 
+                                    />
+
+                                </label>
+                            
+                            :
+                                <div>
+                                    <p>{activity.type}</p>
+                                    <ActivityDeleteBtn id={activity.id} userId={activity.user_id} deleteEvent={deleteEvent} />
+                                    <ActivityEditBtn id={activity.id} type={activity.type} userId={activity.user_id} editEvent={editEvent} />
+                                </div>
+                            }
+
                         </div>
             })}
         </>
