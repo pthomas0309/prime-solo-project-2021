@@ -19,7 +19,7 @@ function* fetchTracker(action) {
 
         // set the state of the tracker reducer to
         // the tracker table data
-        yield put({ type: 'FETCH_TRACKER', payload: trackerObjects.data });
+        yield put({ type: 'SET_TRACKER', payload: trackerObjects.data });
 
     } 
 
@@ -44,8 +44,10 @@ function* addTracker(action) {
         withCredentials: true,
         };
 
+        console.log('POSTing tracker');
         // axios POST for adding a tracker to the tracker table
         yield axios.post('/api/tracker', action.payload, config);
+        console.log('tracker POSTed');
 
         // run the saga to GET all trackers
         yield put({ type: 'FETCH_TRACKER' });
