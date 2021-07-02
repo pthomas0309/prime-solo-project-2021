@@ -4,19 +4,38 @@ import {useSelector} from 'react-redux';
 // bring in useDispatch
 import {useDispatch} from 'react-redux';
 
+// bring in UpdateDuration component
+import UpdateDuration from '../UpdateDuration/UpdateDuration'
+
 
 function AddTracker() {
 
     // make useDispatch available as dispatch
     const dispatch = useDispatch();
   
-    // useEffect dispatches to activity reducer 
-    // to set the activity reducer to the activity data
+    // run on page load
     useEffect(() => {
+        
+        // call setReducers
+        setReducers();
+
+    }, []);
+
+    // function to handle setting reducer
+    // data in useEffect
+    const setReducers = () => {
+
+        // set the activity reducer to the activity data
         dispatch({
             type: 'FETCH_ACTIVITY'
         });
-    }, []);
+
+        // set the tracker reducer to the tracker data
+        dispatch({
+            type: 'FETCH_TRACKER'
+        });
+
+    }
 
     // state var for the id of the activity
     // to be tracked
@@ -67,22 +86,24 @@ function AddTracker() {
 
     return (
         <div>
-        <h2>Track</h2>
-        <form onSubmit={e => addTracker(e)}>
-            <label>Please select an activity to track
-                <br/>
-                <select onChange={e => saveId(e)} name="activity" id="activity" >
-                    <option value='0'>Select Activity</option>
-                    {userActivities?.map(activity => {
-                        return (
-                            <option key={activity.id} value={activity.id}>{activity.type}</option>
-                        )
-                    })}
-                </select>
+            <h2>Track</h2>
+            <form onSubmit={e => addTracker(e)}>
+                <label>Please select an activity to track
+                    <br/>
+                    <select onChange={e => saveId(e)} name="activity" id="activity" >
+                        <option value='0'>Select Activity</option>
+                        {userActivities?.map(activity => {
+                            return (
+                                <option key={activity.id} value={activity.id}>{activity.type}</option>
+                            )
+                        })}
+                    </select>
 
-            </label>
-            <input type="submit" value="track" />
-        </form>
+                </label>
+                <input type="submit" value="track" />
+            </form>
+
+            <UpdateDuration dispatch={dispatch} />
         </div>
     );
 }
