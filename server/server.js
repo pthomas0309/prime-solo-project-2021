@@ -12,6 +12,7 @@ const userRouter = require('./routes/user.router');
 
 // my routes
 const activityRouter = require('./routes/activity.router');
+const trackerRouter = require('./routes/tracker.router');
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -31,6 +32,9 @@ app.use('/api/user', userRouter);
 
 // route to CREATE, READ, UPDATE, DELETE activities
 app.use('/api/activity', activityRouter);
+
+// route to CREATE, READ trackers
+app.use('/api/tracker', trackerRouter);
 
 // Serve static files
 app.use(express.static('build'));

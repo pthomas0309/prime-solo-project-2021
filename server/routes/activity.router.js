@@ -199,7 +199,7 @@ finally {
   /**
  * PUT route template
  */
- router.put('/:activityId/:userId', async (req, res) => {
+ router.put('/:activityId/:userId', rejectUnauthenticated, async (req, res) => {
     // PUT route code here
 
     console.log(
