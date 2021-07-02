@@ -10,13 +10,29 @@ function AddTracker() {
     // make useDispatch available as dispatch
     const dispatch = useDispatch();
   
-    // useEffect dispatches to activity reducer 
-    // to set the activity reducer to the activity data
+    // run on page load
     useEffect(() => {
+        
+        // call setReducers
+        setReducers();
+        
+    }, []);
+
+    // function to handle setting reducer
+    // data in useEffect
+    const setReducers = () => {
+
+        // set the activity reducer to the activity data
         dispatch({
             type: 'FETCH_ACTIVITY'
         });
-    }, []);
+
+        // set the tracker reducer to the tracker data
+        dispatch({
+            type: 'FETCH_TRACKER'
+        });
+
+    }
 
     // state var for the id of the activity
     // to be tracked
