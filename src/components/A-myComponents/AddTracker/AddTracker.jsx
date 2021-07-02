@@ -4,6 +4,9 @@ import {useSelector} from 'react-redux';
 // bring in useDispatch
 import {useDispatch} from 'react-redux';
 
+// bring in UpdateDuration component
+import UpdateDuration from '../UpdateDuration/UpdateDuration'
+
 
 function AddTracker() {
 
@@ -15,7 +18,7 @@ function AddTracker() {
         
         // call setReducers
         setReducers();
-        
+
     }, []);
 
     // function to handle setting reducer
@@ -83,22 +86,24 @@ function AddTracker() {
 
     return (
         <div>
-        <h2>Track</h2>
-        <form onSubmit={e => addTracker(e)}>
-            <label>Please select an activity to track
-                <br/>
-                <select onChange={e => saveId(e)} name="activity" id="activity" >
-                    <option value='0'>Select Activity</option>
-                    {userActivities?.map(activity => {
-                        return (
-                            <option key={activity.id} value={activity.id}>{activity.type}</option>
-                        )
-                    })}
-                </select>
+            <h2>Track</h2>
+            <form onSubmit={e => addTracker(e)}>
+                <label>Please select an activity to track
+                    <br/>
+                    <select onChange={e => saveId(e)} name="activity" id="activity" >
+                        <option value='0'>Select Activity</option>
+                        {userActivities?.map(activity => {
+                            return (
+                                <option key={activity.id} value={activity.id}>{activity.type}</option>
+                            )
+                        })}
+                    </select>
 
-            </label>
-            <input type="submit" value="track" />
-        </form>
+                </label>
+                <input type="submit" value="track" />
+            </form>
+
+            <UpdateDuration dispatch={dispatch} />
         </div>
     );
 }
