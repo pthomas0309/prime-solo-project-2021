@@ -22,7 +22,8 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 // My components
-import ActivityForm from '../A-myComponents/ActivityForm/ActivityForm'
+import ActivityForm from '../A-myComponents/ActivityForm/ActivityForm';
+import AddTracker from '../A-myComponents/AddTracker/AddTracker';
 
 import './App.css';
 
@@ -69,6 +70,15 @@ function App() {
             path="/new-activity"
           >
             <ActivityForm />
+          </ProtectedRoute>
+
+          {/* Visiting localhost:3000/tracker will bring us to the add activity page */}
+          <ProtectedRoute
+            // logged in shows AddTracker else shows LoginPage
+            exact
+            path="/tracker"
+          >
+            <AddTracker />
           </ProtectedRoute>
 
           <ProtectedRoute
