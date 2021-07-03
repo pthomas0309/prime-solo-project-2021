@@ -226,6 +226,9 @@ finally {
             // variable for the changes to be made to type
             const typeUpdate = req.body.edits;
 
+            // start the transaction block
+            await client.query('BEGIN');
+
             // SQL query to update an activity by id
             const queryString = `
                 UPDATE "user_activities" SET "type" = $1 WHERE "user_activities".id = $2;
