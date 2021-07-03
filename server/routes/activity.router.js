@@ -150,6 +150,9 @@ finally {
             // variable for the activity id to delete
             const activityId = req.params.activityId;
 
+            // start the transaction block
+            await client.query('BEGIN');
+
             // SQL query to delete an activity by id
             const queryString = `
                 DELETE FROM "user_activities" WHERE "user_activities".id = $1;
@@ -199,7 +202,7 @@ finally {
   /**
  * PUT route template
  */
- router.put('/:activityId/:userId', async (req, res) => {
+ router.put('/:activityId/:userId', rejectUnauthenticated, async (req, res) => {
     // PUT route code here
 
     console.log(
