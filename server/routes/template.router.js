@@ -23,4 +23,11 @@ router.post('/', async (req, res) => {
   // DELETE route code here
 });
 
+/**
+ * PUT route template
+ */
+ router.put('/', async (req, res) => {
+  // PUT route code here
+});
+
 module.exports = router;

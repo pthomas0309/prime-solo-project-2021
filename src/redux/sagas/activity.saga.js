@@ -89,6 +89,36 @@ function* deleteActivity(action) {
     };
 };
 
+// worker Saga: will be fired on "SUBMIT_CHANGES" actions
+function* updateActivity(action) {
+
+    // try executes until error
+    try {
+
+        // the config includes credentials which
+        // allow the server session to recognize the user
+        const config = {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        };
+
+        console.log(action.payload);
+        // axios PUT for adding an activity to the user_activity table
+        yield axios.put(`/api/activity/${action.payload.activityId}/${action.payload.userId}`, action.payload, config);
+
+        // run the saga to GET all activity
+        yield put({ type: 'FETCH_ACTIVITY' });
+
+    } 
+
+    // catch executes after error in try
+    catch (err) {
+
+        console.log('Error in activity PUT', err);
+
+    };
+};
+
 // listener for saga actions
 function* activitySaga() {
 
@@ -100,6 +130,9 @@ function* activitySaga() {
 
     // listen for 'FETCH_ACTIVITY' action then run fetchActivity
     yield takeLatest('DELETE_ACTIVITY', deleteActivity);
+
+    // listen for 'SUBMIT_CHANGES' action then run fetchActivity
+    yield takeLatest('SUBMIT_CHANGES', updateActivity);
 
 }
 

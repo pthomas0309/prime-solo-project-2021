@@ -1,5 +1,5 @@
 // bring in the DisplayActivities component
-import DisplayActivities from './DisplayActivities/DisplayActivities'
+import DisplayActivities from '../DisplayActivities/DisplayActivities'
 
 // bring in useState
 import {useState} from 'react';
