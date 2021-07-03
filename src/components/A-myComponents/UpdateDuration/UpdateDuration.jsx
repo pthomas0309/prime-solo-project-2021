@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import {useSelector} from 'react-redux';
-import activityReducer from '../../../redux/reducers/activity.reducer';
-
 
 function UpdateDuration({dispatch}) {
   
@@ -38,6 +36,8 @@ function UpdateDuration({dispatch}) {
             // push the update object into the queue array
             setDurationUpdates([...durationUpdates, durationHrMin[tracker.type]]);
 
+            // set isQueue state var to true
+            // enabling button
             setIsQueue(true)
 
             // reset the input isUpdatinf state obj
@@ -71,67 +71,67 @@ function UpdateDuration({dispatch}) {
     const updateDuration = (e, tracker) => {
 
 
-            /* conditional handles updating the
-               state object durationHrMin
-               and the isUpdating state object */
+        /* conditional handles updating the
+           state object durationHrMin
+           and the isUpdating state object */
 
-            // executes when the value of a
-            // duration input is not an empty string
-            if (e.target.value != '' && e.target.value > 0 ) {
+        // executes when the value of a
+        // duration input is not an empty string
+        if (e.target.value != '' && e.target.value > 0 ) {
 
-                console.log('in if');
-                // stop page load
-                e.preventDefault();
+            console.log('in if');
+            // stop page load
+            e.preventDefault();
 
-                // set isUpdating boolean for the 
-                // input that is the event origin
-                setIsUpdating({
-                    ...isUpdating,
-                    [tracker.id]: {
-                        ...isUpdating?.[tracker.id],
-                        [e.target.name]: true
-                    }
-                });
+            // set isUpdating boolean for the 
+            // input that is the event origin
+            setIsUpdating({
+                ...isUpdating,
+                [tracker.id]: {
+                    ...isUpdating?.[tracker.id],
+                    [e.target.name]: true
+                }
+            });
 
-                // update state based on property name
-                setDurationHrMin({
-                    ...durationHrMin,
-                    [tracker.type]: {
-                        ...durationHrMin[tracker.type],
-                        [e.target.name]: e.target.value,
-                        activity: tracker.type
-                    }
-                });
-            }
+            // update state based on property name
+            setDurationHrMin({
+            ...durationHrMin,
+                [tracker.type]: {
+                    ...durationHrMin[tracker.type],
+                    [e.target.name]: e.target.value,
+                    activity: tracker.type
+                }
+            });
+        }
 
-            // executes then the input value
-            // is an empty string
-            else {
+        // executes then the input value
+        // is an empty string
+        else {
 
-                console.log('in else');
-                // stop page load
-                e.preventDefault();
+            console.log('in else');
+            // stop page load
+            e.preventDefault();
 
-                // set isUpdating boolean for the 
-                // input that is the event origin
-                setIsUpdating({
-                    ...isUpdating,
-                    [tracker.id]: {
-                        ...isUpdating?.[tracker.id],
-                        [e.target.name]: false
-                    }
-                });
+            // set isUpdating boolean for the 
+            // input that is the event origin
+            setIsUpdating({
+                ...isUpdating,
+                [tracker.id]: {
+                    ...isUpdating?.[tracker.id],
+                    [e.target.name]: false
+                }
+            });
 
-                // update state based on property name
-                setDurationHrMin({
-                    ...durationHrMin,
-                    [tracker.type]: {
-                        ...durationHrMin[tracker.type],
-                        [e.target.name]: e.target.value
-                    }
-                });
+            // update state based on property name
+            setDurationHrMin({
+                ...durationHrMin,
+                [tracker.type]: {
+                    ...durationHrMin[tracker.type],
+                    [e.target.name]: e.target.value
+                }
+            });
 
-            };
+        };
     };
 
     // function to handle submitting updates

@@ -39,7 +39,7 @@ function AddTracker() {
 
     // state var for the id of the activity
     // to be tracked
-    const [idsToTrack, setIdToTrack] = useState({activityId: ''});
+    const [idToTrack, setIdToTrack] = useState({activityId: ''});
 
     // function to handle changing the select
     // dropdown
@@ -49,7 +49,7 @@ function AddTracker() {
         e.preventDefault();
 
         // set the state var to the option value
-        setIdToTrack({activityId: e.target.value, userId: e.target.key});
+        setIdToTrack({activityId: e.target.value});
 
     };
 
@@ -60,13 +60,13 @@ function AddTracker() {
 
         // conditional to check if an
         // activity was selected (not default)
-        if (idsToTrack.activityId != '0') {
+        if (idToTrack.activityId != '0') {
 
             // dispatch to the tracker saga for
             // axios POST to /api/tracker
             dispatch({
                 type: 'ADD_NEW_TRACKER',
-                payload: idsToTrack
+                payload: idToTrack
             });
 
         }
@@ -94,7 +94,7 @@ function AddTracker() {
                         <option value='0'>Select Activity</option>
                         {userActivities?.map(activity => {
                             return (
-                                <option key={activity.id} value={activity.user_id}>{activity.type}</option>
+                                <option key={activity.id} value={activity.id}>{activity.type}</option>
                             )
                         })}
                     </select>
