@@ -28,8 +28,10 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     // queryString to get the trackers
     // attatched to the user id sent in the request
     const queryString = `
-      SELECT *
-      FROM "tracker"
+      SELECT "user_activities".type, "tracker".*
+      FROM "user_activities"
+      JOIN "tracker"
+      ON "user_activities".id = "tracker".activity_id
       WHERE "tracker".user_id = $1;
     `;
 
