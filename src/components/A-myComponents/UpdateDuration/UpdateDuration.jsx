@@ -93,7 +93,8 @@ function UpdateDuration({dispatch}) {
                 }
             });
 
-            // update state based on property name
+            // update state based on activity name
+            // and the name of the input at event origin
             setDurationHrMin({
             ...durationHrMin,
                 [tracker.type]: {
