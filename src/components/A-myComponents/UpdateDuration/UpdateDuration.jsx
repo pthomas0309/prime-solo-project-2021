@@ -2,69 +2,136 @@ import React, { useState } from 'react';
 import {useSelector} from 'react-redux';
 
 function UpdateDuration({dispatch}) {
+
+    // bring in the duration reducer state
+    // duration updates
+    const durationUpdates = useSelector(store => store.duration);
   
     // state variable for the duration of an activity
     const [durationHrMin, setDurationHrMin] = useState({});
 
-    // state variable for the array of duration updates
-    const [durationUpdates, setDurationUpdates] = useState([]);
-
-    // state variable for queue
-    const [isQueue, setIsQueue] = useState(false);
-
-    // state variable for the activity being updated
-    const [isUpdating, setIsUpdating] = useState({});
-
     // function to dispatch to duration saga
     const finalizeUpdate = (e, tracker) => {
 
-            if 
-            (
-            durationHrMin[tracker.type].minutes > 0 
-                &&
-            durationHrMin[tracker.type].minutes <= 60 
-            || 
-            durationHrMin[tracker.type].hours > 0
-                &&
-            durationHrMin[tracker.type].hours < 24
-            ) {
+        // stop page load
+        e.preventDefault();
 
-                console.log(tracker);
-            // stop page load
-            e.preventDefault();
+        // switch statement handles activating the 
+        // queue button and updating the variable state
+            switch (true) {
 
-            // push the update object into the queue array
-            setDurationUpdates([...durationUpdates, durationHrMin[tracker.type]]);
+                // case: a number from 1 and 59 has
+                // been typed in the minutes input 
+                // of an activity section
+                case 
+                (
+                durationHrMin[tracker.type].minutes > 0 
+                    &&
+                durationHrMin[tracker.type].minutes < 60
+                ):
 
-            // set isQueue state var to true
-            // enabling button
-            setIsQueue(true)
+                    // dispatch update object to
+                    // duration reducer state.queue
+                    dispatch({
+                        type: 'UPDATE_QUEUE',
+                        payload: durationHrMin[tracker.type]
+                    });
 
-            // reset the input isUpdatinf state obj
-            setIsUpdating({
-                ...isUpdating,
-                [tracker.id]: {
-                    hours: false,
-                    minutes: false
-                }
-            });
+                    // set duration reducer state.isUpdating 
+                    // to false by tracker.id
+                    dispatch({
+                        type: 'UPDATE_FINISHED',
+                        payload: tracker
+                    });
 
-            // update state based on property name
-            setDurationHrMin({
-                ...durationHrMin,
-                [tracker.type]: {}
-            });
+                    // clear the duration data state obj
+                    setDurationHrMin({
+                        ...durationHrMin,
+                        [tracker.type]: {}
+                    });
 
-            // clear the input
-            e.target.reset();
+                    // clear inputs
+                    e.target.reset();
+                    return;
 
-            // alert the user that the update has been queued
-            alert('Update added to the queue. Please hit submit after all updates have been queued.')
-        }
+                // case: a number from 1 and 24 has
+                // been typed in the minutes input 
+                // of an activity section
+                case 
+                (
+                durationHrMin[tracker.type].hours > 0
+                    &&
+                durationHrMin[tracker.type].hours <= 24
+                ):
+    
+                    // dispatch update object to
+                    // duration reducer state.queue
+                    dispatch({
+                        type: 'UPDATE_QUEUE',
+                        payload: durationHrMin[tracker.type]
+                    });
+    
+                    // set duration reducer state.isUpdating 
+                    // to false by tracker.id
+                    dispatch({
+                        type: 'UPDATE_FINISHED',
+                        payload: tracker
+                    });
 
-        else {
-            alert('Please update duration field.')
-        }
+                    // clear the duration data state obj
+                    setDurationHrMin({
+                        ...durationHrMin,
+                        [tracker.type]: {}
+                    });
+
+                    // clear inputs
+                    e.target.reset();
+                    return;
+
+                // case: number from 1-59 in the minutes input
+                // and a number from 1-24 in the hours input
+                // of an activity section
+                case
+                (
+                durationHrMin[tracker.type].minutes > 0 
+                    &&
+                durationHrMin[tracker.type].minutes < 60
+                    &&
+                durationHrMin[tracker.type].hours > 0
+                    &&
+                durationHrMin[tracker.type].hours <= 24
+                ):
+                    
+                    // dispatch update object to
+                    // duration reducer state.queue
+                    dispatch({
+                        type: 'UPDATE_QUEUE',
+                        payload: durationHrMin[tracker.type]
+                    });
+
+                    // set duration reducer state.isUpdating 
+                    // to false by tracker.id
+                    dispatch({
+                        type: 'UPDATE_FINISHED',
+                        payload: tracker
+                    });
+
+                    // clear the duration data state obj
+                    setDurationHrMin({
+                        ...durationHrMin,
+                        [tracker.type]: {}
+                    });
+
+                    // clear inputs
+                    e.target.reset();
+                    return;
+
+                // no cases are true send out alert to update description
+                default:
+                    alert('Please fill out a valid duration. Either a number from 1 - 24 for the hour field, or from 1-59 for the minutes field.');
+                    return;
+            };
+            
     };
 
     // function to update state var based on input value
@@ -83,14 +150,11 @@ function UpdateDuration({dispatch}) {
             // stop page load
             e.preventDefault();
 
-            // set isUpdating boolean for the 
-            // input that is the event origin
-            setIsUpdating({
-                ...isUpdating,
-                [tracker.id]: {
-                    ...isUpdating?.[tracker.id],
-                    [e.target.name]: true
-                }
+            // dispatch to the duration reducer to
+            // set state.isUpdating to true
+            dispatch({
+                type: 'UPDATE_DURATION',
+                payload: tracker
             });
 
             // update state based on activity name
@@ -99,7 +163,7 @@ function UpdateDuration({dispatch}) {
             ...durationHrMin,
                 [tracker.type]: {
                     ...durationHrMin[tracker.type],
-                    [e.target.name]: e.target.value,
+                    [e.target.name]: (e.target.value),
                     activity: tracker.type
                 }
             });
@@ -113,14 +177,11 @@ function UpdateDuration({dispatch}) {
             // stop page load
             e.preventDefault();
 
-            // set isUpdating boolean for the 
-            // input that is the event origin
-            setIsUpdating({
-                ...isUpdating,
-                [tracker.id]: {
-                    ...isUpdating?.[tracker.id],
-                    [e.target.name]: false
-                }
+            // dispatch to the duration reducer to
+            // set state.isUpdating to false
+            dispatch({
+                type: 'UPDATE_FINISHED',
+                payload: tracker
             });
 
             // update state based on property name
@@ -143,8 +204,10 @@ function UpdateDuration({dispatch}) {
 
         // dispatch array to duration saga
 
-        // reset the state array
-        setDurationUpdates([])
+        // clear the queue in reducer
+        dispatch({
+            type: 'CLEAR_QUEUE'
+        });
     }
 
     // function to decide if 
@@ -153,7 +216,8 @@ function UpdateDuration({dispatch}) {
 
         // conditional to evaluate isUpdating obj
         // by tracker.id and input name attribute
-        if (isUpdating?.[tracker.id]?.hours || isUpdating?.[tracker.id]?.minutes) {
+        if (durationUpdates.isUpdating?.[tracker.id]) {
+            console.log(durationUpdates.isUpdating?.[tracker.id]);
 
             // one of the inputs have a
             // value that isn't an empty string
@@ -164,6 +228,7 @@ function UpdateDuration({dispatch}) {
         // executes when both inputs have 
         // values of an empty string
         else {
+            console.log(durationUpdates.isUpdating);
             
             // disable queue button
             return true;
@@ -173,8 +238,8 @@ function UpdateDuration({dispatch}) {
     // make tracker reducer state available as trackedActivities
     const trackedActivities = useSelector((store) => store.tracker);
 
+    console.log(durationUpdates);
     console.log(durationHrMin);
-    console.log(isUpdating);
     return (
         <div>
             <h2>Duration Updates</h2>
@@ -202,27 +267,25 @@ function UpdateDuration({dispatch}) {
                     </form>
                 )
             })}
-            {durationUpdates?.map((update, i) => {
+            {durationUpdates.queue.map((update, i) => {
                 console.log(update);
                 return (
                     <div key={i}>
                         <h4>{update.activity}</h4>
                         <p>Duration of activity:</p>
-                        {update.hours ? 
-                        <p>hour(s): {update.hours}</p>
-                        :
-                        <p>hour(s): 0</p>
-                        }
-                        {update.minutes ? 
+                        {update.hours === undefined ? 
                         <p>minute(s): {update.minutes}</p>
                         :
-                        <p>minute(s): 0</p>
+                        update.minutes === undefined ? 
+                        <p>hour(s): {update.hours}</p>
+                        :
+                        <p>hour(s): {update.hours} <br/> minute(s): {update.minutes}</p>
                         }
                         <button>DELETE</button>
                     </div>
                 )
             })}
-            <input type="submit" disabled={isQueue ? false : true} onClick={e => submitUpdates} />            
+            <input type="submit" disabled={durationUpdates.queue[0] ? false : true} onClick={e => submitUpdates(e)} />            
         </div>
     );
 }
