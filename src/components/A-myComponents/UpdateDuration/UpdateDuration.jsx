@@ -1,157 +1,75 @@
 import React, { useState } from 'react';
 import {useSelector} from 'react-redux';
 
-function UpdateDuration({dispatch}) {
+function UpdateDuration({dispatch, duration, setDuration}) {
 
     // bring in the duration reducer state
     // duration updates
     const durationUpdates = useSelector(store => store.duration);
-  
-    // state variable for the duration of an activity
-    const [durationHrMin, setDurationHrMin] = useState({});
 
     // function to dispatch to duration saga
     const finalizeUpdate = (e, tracker) => {
 
         // stop page load
         e.preventDefault();
-
-        // switch statement handles activating the 
-        // queue button and updating the variable state
-            switch (true) {
-
-                // case: a number from 1 and 59 has
-                // been typed in the minutes input 
-                // of an activity section
-                case 
-                (
-                durationHrMin[tracker.type].minutes > 0 
-                    &&
-                durationHrMin[tracker.type].minutes < 60
-                ):
-
-                    // dispatch update object to
-                    // duration reducer state.queue
-                    dispatch({
-                        type: 'UPDATE_QUEUE',
-                        payload: durationHrMin[tracker.type]
-                    });
-
-                    // set duration reducer state.isUpdating 
-                    // to false by tracker.id
-                    dispatch({
-                        type: 'UPDATE_FINISHED',
-                        payload: tracker
-                    });
-
-                    // clear the duration data state obj
-                    setDurationHrMin({
-                        ...durationHrMin,
-                        [tracker.type]: {}
-                    });
-
-                    // clear inputs
-                    e.target.reset();
-                    return;
-
-                // case: a number from 1 and 24 has
-                // been typed in the minutes input 
-                // of an activity section
-                case 
-                (
-                durationHrMin[tracker.type].hours > 0
-                    &&
-                durationHrMin[tracker.type].hours <= 24
-                ):
-    
-                    // dispatch update object to
-                    // duration reducer state.queue
-                    dispatch({
-                        type: 'UPDATE_QUEUE',
-                        payload: durationHrMin[tracker.type]
-                    });
-    
-                    // set duration reducer state.isUpdating 
-                    // to false by tracker.id
-                    dispatch({
-                        type: 'UPDATE_FINISHED',
-                        payload: tracker
-                    });
-
-                    // clear the duration data state obj
-                    setDurationHrMin({
-                        ...durationHrMin,
-                        [tracker.type]: {}
-                    });
-
-                    // clear inputs
-                    e.target.reset();
-                    return;
-
-                // case: number from 1-59 in the minutes input
-                // and a number from 1-24 in the hours input
-                // of an activity section
-                case
-                (
-                durationHrMin[tracker.type].minutes > 0 
-                    &&
-                durationHrMin[tracker.type].minutes < 60
-                    &&
-                durationHrMin[tracker.type].hours > 0
-                    &&
-                durationHrMin[tracker.type].hours <= 24
-                ):
                     
-                    // dispatch update object to
-                    // duration reducer state.queue
-                    dispatch({
-                        type: 'UPDATE_QUEUE',
-                        payload: durationHrMin[tracker.type]
-                    });
+        // dispatch update object to
+        // duration reducer state.queue
+        dispatch({
+            type: 'UPDATE_QUEUE',
+            payload: duration[tracker.type]
+        });
 
-                    // set duration reducer state.isUpdating 
-                    // to false by tracker.id
-                    dispatch({
-                        type: 'UPDATE_FINISHED',
-                        payload: tracker
-                    });
+        // set duration reducer state.isUpdating 
+        // to false by tracker.id
+        dispatch({
+            type: 'UPDATE_FINISHED',
+            payload: tracker
+        });
 
-                    // clear the duration data state obj
-                    setDurationHrMin({
-                        ...durationHrMin,
-                        [tracker.type]: {}
-                    });
-
-                    // clear inputs
-                    e.target.reset();
-                    return;
-
-                // no cases are true send out alert to update description
-                default:
-                    alert('Please fill out a valid duration. Either a number from 1 - 24 for the hour field, or from 1-59 for the minutes field.');
-                    return;
-            };
+        // clear the inputs
+        setDuration({
+        ...duration,
+            [tracker.type]: {
+                hours: '',
+                minutes: ''
+            }
+        });
             
     };
 
     // function to update state var based on input value
     const updateDuration = (e, tracker) => {
 
+        // variable for the target value
+        // rounded down to the nearest integer
+        const inputVal = Math.floor(e.target.value);
 
-        /* conditional handles updating the
-           state object durationHrMin
-           and the isUpdating state object */
-
-        // executes when the value of a
-        // duration input is not an empty string
-        if (e.target.value != '' && e.target.value > 0 ) {
+        console.log(inputVal);
+        // activates button and updates duration
+        // object state when the input values
+        // meet parameters
+        if (
+            e.target.name === 'hours' 
+                && 
+            inputVal > 0 
+                && 
+            inputVal <= 24
+            ||  
+            e.target.name === 'minutes' 
+                && 
+            inputVal > 0 
+                && 
+            inputVal < 60
+        ) {
 
             console.log('in if');
+            
             // stop page load
             e.preventDefault();
 
             // dispatch to the duration reducer to
-            // set state.isUpdating to true
+            // set state.isUpdating to false
             dispatch({
                 type: 'UPDATE_DURATION',
                 payload: tracker
@@ -159,41 +77,40 @@ function UpdateDuration({dispatch}) {
 
             // update state based on activity name
             // and the name of the input at event origin
-            setDurationHrMin({
-            ...durationHrMin,
-                [tracker.type]: {
-                    ...durationHrMin[tracker.type],
-                    [e.target.name]: (e.target.value),
-                    activity: tracker.type
+            setDuration({
+                ...duration,
+                    [tracker.type]: {
+                        ...duration[tracker.type],
+                        [e.target.name]: inputVal,
+                    }
                 }
-            });
+            );
         }
 
-        // executes then the input value
-        // is an empty string
+        // executes if target value 
+        // is not an empty string
         else {
 
-            console.log('in else');
             // stop page load
             e.preventDefault();
 
             // dispatch to the duration reducer to
-            // set state.isUpdating to false
+            // set state.isUpdating to true
             dispatch({
                 type: 'UPDATE_FINISHED',
                 payload: tracker
             });
 
-            // update state based on property name
-            setDurationHrMin({
-                ...durationHrMin,
+            // update state based on activity name
+            // and the name of the input at event origin
+            setDuration({
+            ...duration,
                 [tracker.type]: {
-                    ...durationHrMin[tracker.type],
-                    [e.target.name]: e.target.value
+                    ...duration[tracker.type],
+                    [e.target.name]: (e.target.value),
                 }
             });
-
-        };
+        }
     };
 
     // function to handle submitting updates
@@ -203,6 +120,10 @@ function UpdateDuration({dispatch}) {
         e.preventDefault();
 
         // dispatch array to duration saga
+        dispatch({
+            type: 'PROCESS_QUEUE',
+            payload: durationUpdates.queue
+        });
 
         // clear the queue in reducer
         dispatch({
@@ -235,11 +156,22 @@ function UpdateDuration({dispatch}) {
         };
     };
 
+    // function to handle removing an update from the queue
+    const deleteFromQueue = (i) => {
+
+        // dispatch DELETE UPDATE action
+        // to duraration reducer payload is index to delete
+        dispatch({
+            type: 'DELETE_UPDATE',
+            payload: i
+        })
+    }
+
     // make tracker reducer state available as trackedActivities
     const trackedActivities = useSelector((store) => store.tracker);
 
     console.log(durationUpdates);
-    console.log(durationHrMin);
+    console.log(duration);
     return (
         <div>
             <h2>Duration Updates</h2>
@@ -251,6 +183,7 @@ function UpdateDuration({dispatch}) {
                         <br/>
                         <label htmlFor={`${tracker.type}HoursIn`}>
                             <input 
+                                value={duration?.[tracker.type]?.hours}
                                 name="hours"
                                 onChange={e => updateDuration(e, tracker)}  
                                 type="number" 
@@ -258,6 +191,7 @@ function UpdateDuration({dispatch}) {
                         </label>
                         <label htmlFor={`${tracker.type}MinutesIn`}>
                             <input 
+                                value={duration?.[tracker.type]?.minutes}
                                 name="minutes"
                                 onChange={e => updateDuration(e, tracker)} 
                                 type="number" 
@@ -268,20 +202,20 @@ function UpdateDuration({dispatch}) {
                 )
             })}
             {durationUpdates.queue.map((update, i) => {
-                console.log(update);
+                console.log(i);
                 return (
                     <div key={i}>
                         <h4>{update.activity}</h4>
                         <p>Duration of activity:</p>
-                        {update.hours === undefined ? 
+                        {update.hours === '' ? 
                         <p>minute(s): {update.minutes}</p>
                         :
-                        update.minutes === undefined ? 
+                        update.minutes === '' ? 
                         <p>hour(s): {update.hours}</p>
                         :
                         <p>hour(s): {update.hours} <br/> minute(s): {update.minutes}</p>
                         }
-                        <button>DELETE</button>
+                        <button onClick={() => deleteFromQueue(i)} >DELETE</button>
                     </div>
                 )
             })}

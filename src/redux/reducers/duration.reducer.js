@@ -4,6 +4,11 @@ const durationReducer = (state = { queue: [], isUpdating: {} }, action) => {
     switch (action.type) {
         case 'UPDATE_QUEUE':
             return {...state, queue: [...state.queue, action.payload]};
+        case 'DELETE_UPDATE':
+            const index = action.payload
+            state.queue.splice(index, 1);
+            console.log(state.queue);
+            return {...state, queue: state.queue};
         case 'CLEAR_QUEUE':
             return {...state, queue: []};
         case 'UPDATE_DURATION':
