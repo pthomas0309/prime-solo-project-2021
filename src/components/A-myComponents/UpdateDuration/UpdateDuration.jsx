@@ -82,6 +82,7 @@ function UpdateDuration({dispatch, duration, setDuration}) {
                     [tracker.type]: {
                         ...duration[tracker.type],
                         [e.target.name]: inputVal,
+                        activity: tracker.type
                     }
                 }
             );
