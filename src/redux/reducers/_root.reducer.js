@@ -4,7 +4,8 @@ import user from './user.reducer';
 
 // my reducers
 import activity from './activity.reducer';
-import tracker from './tracker.reducer'
+import tracker from './tracker.reducer';
+import duration from './duration.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 
   activity,
   tracker,
+  duration,
 });
 
 export default rootReducer;

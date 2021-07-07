@@ -12,6 +12,9 @@ function AddTracker() {
 
     // make useDispatch available as dispatch
     const dispatch = useDispatch();
+
+    // bring in the activity reducer
+    const userActivities = useSelector((store) => store.activity);
   
     // run on page load
     useEffect(() => {
@@ -39,7 +42,10 @@ function AddTracker() {
 
     // state var for the id of the activity
     // to be tracked
-    const [idToTrack, setIdToTrack] = useState({activityId: ''});
+    const [idToTrack, setIdToTrack] = useState({activity: '', activityId: ''});
+
+    // state variable for the duration of an activity
+    const [durationHrMin, setDurationHrMin] = useState({});
 
     // function to handle changing the select
     // dropdown
@@ -49,7 +55,7 @@ function AddTracker() {
         e.preventDefault();
 
         // set the state var to the option value
-        setIdToTrack({activityId: e.target.value});
+        setIdToTrack({activity: userActivities[e.target.value].type, activityId: userActivities[e.target.value].id});
 
     };
 
@@ -69,6 +75,22 @@ function AddTracker() {
                 payload: idToTrack
             });
 
+            // set the state object for duration
+            // to include the activity
+            setDurationHrMin({
+                ...durationHrMin,
+                [idToTrack.activity]: {
+                    hours: '',
+                    minutes: ''
+                }
+            });
+
+            // reset id state object
+            setIdToTrack({
+                activity: '',
+                activityId: ''
+            });
+
         }
 
         else {
@@ -81,9 +103,7 @@ function AddTracker() {
 
     };
 
-    // bring in the activity reducer
-    const userActivities = useSelector((store) => store.activity);
-
+    console.log(durationHrMin);
     return (
         <div>
             <h2>Track</h2>
@@ -92,9 +112,9 @@ function AddTracker() {
                     <br/>
                     <select onChange={e => saveId(e)} name="activity" id="activity" >
                         <option value='0'>Select Activity</option>
-                        {userActivities?.map(activity => {
+                        {userActivities?.map((activity, i) => {
                             return (
-                                <option key={activity.id} value={activity.id}>{activity.type}</option>
+                                <option key={activity.id} value={i}>{activity.type}</option>
                             )
                         })}
                     </select>
@@ -103,7 +123,7 @@ function AddTracker() {
                 <input type="submit" value="track" />
             </form>
 
-            <UpdateDuration dispatch={dispatch} />
+            <UpdateDuration dispatch={dispatch} duration={durationHrMin} setDuration={setDurationHrMin} />
         </div>
     );
 }
